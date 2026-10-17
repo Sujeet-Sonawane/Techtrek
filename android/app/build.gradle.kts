@@ -55,4 +55,6 @@ dependencies {
   // Compose
   implementation(libs.androidx.compose.ui)
   implementation(libs.androidx.compose.material3)
+  implementation("androidx.compose.material:material-icons-core")
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
 }
