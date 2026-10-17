@@ -243,10 +243,14 @@ async function startAnalysis() {
     let result = null;
 
     // Check if backend is available
-    if (state.isBackendOnline && state.selectedSampleId) {
+    if (state.isBackendOnline) {
       try {
         const formData = new FormData();
-        formData.append('sample_id', state.selectedSampleId);
+        if (state.selectedSampleId) {
+          formData.append('sample_id', state.selectedSampleId);
+        } else if (state.selectedFile) {
+          formData.append('file', state.selectedFile, 'user_audio.wav');
+        }
         formData.append('transcript', transcript);
 
         const response = await fetch(`${state.backendUrl}/analyze`, {
