@@ -17,11 +17,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import com.nexus.app.ui.screens.CallShieldScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -170,6 +172,19 @@ fun NexusApp(
                     )
                 )
                 NavigationBarItem(
+                    selected = currentScreen == NexusScreen.CALL_SHIELD,
+                    onClick = { viewModel.navigateTo(NexusScreen.CALL_SHIELD) },
+                    icon = { Icon(Icons.Default.Call, contentDescription = "Call Guard") },
+                    label = { Text("Call Guard", fontSize = 11.sp) },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = NexusBlueLight,
+                        selectedTextColor = NexusBlueLight,
+                        unselectedIconColor = NexusTextMuted,
+                        unselectedTextColor = NexusTextMuted,
+                        indicatorColor = NexusSurface
+                    )
+                )
+                NavigationBarItem(
                     selected = currentScreen == NexusScreen.ANALYZE,
                     onClick = { viewModel.navigateTo(NexusScreen.ANALYZE) },
                     icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Analyze") },
@@ -208,19 +223,6 @@ fun NexusApp(
                         indicatorColor = NexusSurface
                     )
                 )
-                NavigationBarItem(
-                    selected = currentScreen == NexusScreen.SETTINGS,
-                    onClick = { viewModel.navigateTo(NexusScreen.SETTINGS) },
-                    icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-                    label = { Text("Settings", fontSize = 11.sp) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = NexusBlueLight,
-                        selectedTextColor = NexusBlueLight,
-                        unselectedIconColor = NexusTextMuted,
-                        unselectedTextColor = NexusTextMuted,
-                        indicatorColor = NexusSurface
-                    )
-                )
             }
         }
     ) { innerPadding ->
@@ -235,6 +237,7 @@ fun NexusApp(
                     onPickVideo = { videoPickerLauncher.launch("video/*") },
                     onPickAudio = { audioPickerLauncher.launch("audio/*") }
                 )
+                NexusScreen.CALL_SHIELD -> CallShieldScreen(viewModel = viewModel)
                 NexusScreen.ANALYZE -> AnalyzeMediaScreen(
                     viewModel = viewModel,
                     onPickMedia = { videoPickerLauncher.launch("*/*") }

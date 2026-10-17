@@ -80,6 +80,35 @@ object DemoScenarios {
                     "Audio Bitrate" to "128 kbps AAC",
                     "Metadata Tampering" to "Original camera EXIF missing; synthesized audio track multiplexed"
                 ),
+                explainabilityFactors = listOf(
+                    ForensicExplainabilityFactor(
+                        factorName = "Vocal Cord Micro-Tremor (Jitter)",
+                        observedValue = "0.08% (Unnaturally Low)",
+                        expectedNormalRange = "0.40% - 1.20%",
+                        isSuspicious = true,
+                        impactWeight = "+40% Suspicion",
+                        diagnosticSummary = "Mathematical neural vocoder flattening eliminates involuntary human laryngeal tremor.",
+                        technicalRationale = "Generated using ElevenLabs voice cloning pipeline with statistical variance smoothing."
+                    ),
+                    ForensicExplainabilityFactor(
+                        factorName = "A/V Viseme Desynchronization",
+                        observedValue = "+140 ms Offset",
+                        expectedNormalRange = "< 45 ms Synchronized",
+                        isSuspicious = true,
+                        impactWeight = "+35% Suspicion",
+                        diagnosticSummary = "Lip boundary motion lags audio consonant syllables /b/ and /p/.",
+                        technicalRationale = "Wav2Lip face reenactment desynchronization during rapid speech."
+                    ),
+                    ForensicExplainabilityFactor(
+                        factorName = "Audio Room Reverberation Splicing",
+                        observedValue = "Phase Shift at 00:32",
+                        expectedNormalRange = "Continuous Acoustic Phase",
+                        isSuspicious = true,
+                        impactWeight = "+25% Splicing",
+                        diagnosticSummary = "Sudden drop in background noise floor immediately before URL mention.",
+                        technicalRationale = "Two distinct audio clips spliced together."
+                    )
+                ),
                 limitationsNote = "Audio and video analysis identifies technical anomalies; findings are probabilistic indicators rather than judicial proof."
             ),
             truthCheckResult = TruthCheckResult(

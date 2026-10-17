@@ -14,6 +14,9 @@ import com.nexus.app.data.model.MediaMetadata
 import com.nexus.app.data.model.SpokenClaim
 import com.nexus.app.data.model.TruthCheckResult
 import com.nexus.app.data.model.TruthVerdict
+import com.nexus.app.data.model.CallShieldState
+import com.nexus.app.data.model.CallSimulationPreset
+import com.nexus.app.data.repository.CallShieldRepository
 import com.nexus.app.data.repository.MediaForensicsRepository
 import com.nexus.app.data.repository.ReportStoreRepository
 import com.nexus.app.data.repository.TruthCheckRepository
@@ -26,6 +29,7 @@ import java.util.UUID
 
 enum class NexusScreen(val title: String) {
     HOME("NEXUS"),
+    CALL_SHIELD("Call Shield"),
     ANALYZE("Analyze Media"),
     TRUTH_CHECK("TruthCheck"),
     COMPARE("Compare Recordings"),
@@ -53,6 +57,11 @@ class NexusViewModel(application: Application) : AndroidViewModel(application) {
     private val forensicsRepo = MediaForensicsRepository(application)
     private val truthCheckRepo = TruthCheckRepository()
     private val reportStoreRepo = ReportStoreRepository(application)
+    private val callShieldRepo = CallShieldRepository(application)
+
+    // Call Shield State
+    val callShieldState: StateFlow<CallShieldState> = callShieldRepo.callState
+    val isLiveMicListening: StateFlow<Boolean> = callShieldRepo.isLiveMicListening
 
     // Screen Navigation
     private val _currentScreen = MutableStateFlow(NexusScreen.HOME)
@@ -149,7 +158,10 @@ class NexusViewModel(application: Application) : AndroidViewModel(application) {
             _analysisStep.value = "Cross-referencing spoken claims against PIB & myScheme..."
             delay(400)
 
-            val forensic = forensicsRepo.analyzeMedia(meta)
+            val forensic = forensicsRepo.analyzeMedia(
+                metadata = meta,
+                highSensitivity = _settings.value.highSensitivityForensics
+            )
             val truth = truthCheckRepo.verifyClaims(meta.fileName)
 
             val report = InvestigationReport(
@@ -226,5 +238,19 @@ class NexusViewModel(application: Application) : AndroidViewModel(application) {
             comparisonSummary = "Side-by-side forensic and factual cross-examination"
         )
         navigateTo(NexusScreen.COMPARE)
+    }
+
+    fun startCallSimulation(preset: CallSimulationPreset) {
+        callShieldRepo.startSimulation(preset, viewModelScope)
+        navigateTo(NexusScreen.CALL_SHIELD)
+    }
+
+    fun startLiveMicListener() {
+        callShieldRepo.startLiveMicListener(viewModelScope)
+        navigateTo(NexusScreen.CALL_SHIELD)
+    }
+
+    fun stopCallShield() {
+        callShieldRepo.stopCallShield()
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
@@ -48,6 +49,7 @@ import com.nexus.app.ui.theme.NexusBluePrimary
 import com.nexus.app.ui.theme.NexusBorder
 import com.nexus.app.ui.theme.NexusDarkBg
 import com.nexus.app.ui.theme.NexusGreen
+import com.nexus.app.ui.theme.NexusGreenDark
 import com.nexus.app.ui.theme.NexusSurface
 import com.nexus.app.ui.theme.NexusSurfaceElevated
 import com.nexus.app.ui.theme.NexusTextMuted
@@ -144,6 +146,67 @@ fun HomeScreen(
                             color = NexusTextSecondary
                         )
                     }
+                }
+            }
+        }
+
+        // Truecaller-Style Live Call Shield Hero Banner
+        item {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, NexusGreen.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+                    .clickable { viewModel.navigateTo(NexusScreen.CALL_SHIELD) },
+                colors = CardDefaults.cardColors(containerColor = NexusSurface),
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(46.dp)
+                            .clip(CircleShape)
+                            .background(NexusGreenDark),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Call,
+                            contentDescription = null,
+                            tint = NexusGreen,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(14.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "TRUECALLER-STYLE CALL GUARD",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = NexusGreen,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 9.sp
+                            )
+                        }
+                        Text(
+                            text = "Live Call & Voice Verification",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = NexusTextPrimary,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Auto-screen incoming phone calls for AI voice cloning and financial scams.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = NexusTextSecondary
+                        )
+                    }
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = null,
+                        tint = NexusGreen,
+                        modifier = Modifier.size(20.dp)
+                    )
                 }
             }
         }

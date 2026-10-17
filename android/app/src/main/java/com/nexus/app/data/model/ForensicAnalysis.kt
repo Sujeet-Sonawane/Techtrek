@@ -68,5 +68,6 @@ data class ForensicAnalysis(
     val videoSync: VideoSync? = null,
     val timelineFindings: List<TimestampedFinding> = emptyList(),
     val technicalProvenance: Map<String, String> = emptyMap(),
+    val explainabilityFactors: List<ForensicExplainabilityFactor> = emptyList(),
     val limitationsNote: String
 )

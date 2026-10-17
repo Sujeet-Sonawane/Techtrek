@@ -35,6 +35,7 @@ import com.nexus.app.data.model.ForensicAnalysis
 import com.nexus.app.data.model.ForensicVerdict
 import com.nexus.app.ui.theme.NexusAmber
 import com.nexus.app.ui.theme.NexusAmberDark
+import com.nexus.app.ui.theme.NexusBlueLight
 import com.nexus.app.ui.theme.NexusBorder
 import com.nexus.app.ui.theme.NexusGreen
 import com.nexus.app.ui.theme.NexusGreenDark
@@ -215,9 +216,82 @@ fun VerdictPanelA(
                 Spacer(modifier = Modifier.height(12.dp))
             }
 
+            // Forensic Explainability Factor Breakdown
+            if (analysis.explainabilityFactors.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(14.dp))
+                Text(
+                    text = "FORENSIC DECISION TREE & EXPLAINABILITY",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = NexusBlueLight,
+                    letterSpacing = 0.5.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    analysis.explainabilityFactors.forEach { factor ->
+                        ExplainabilityCard(factor = factor)
+                    }
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
             // Limitations Note
             Text(
                 text = "LIMITATIONS: ${analysis.limitationsNote}",
+                style = MaterialTheme.typography.bodySmall,
+                color = NexusTextMuted,
+                fontSize = 10.sp
+            )
+        }
+    }
+}
+
+@Composable
+private fun ExplainabilityCard(factor: com.nexus.app.data.model.ForensicExplainabilityFactor) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(NexusSurfaceElevated)
+            .border(0.5.dp, if (factor.isSuspicious) NexusRed.copy(alpha = 0.5f) else NexusGreen.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+            .padding(10.dp)
+    ) {
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = factor.factorName,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = NexusTextPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = factor.impactWeight,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = if (factor.isSuspicious) NexusRed else NexusGreen,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "${factor.observedValue} (Normal: ${factor.expectedNormalRange})",
+                style = MaterialTheme.typography.bodySmall,
+                color = NexusBlueLight,
+                fontSize = 11.sp
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = factor.diagnosticSummary,
+                style = MaterialTheme.typography.bodySmall,
+                color = NexusTextSecondary
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = "Why: ${factor.technicalRationale}",
                 style = MaterialTheme.typography.bodySmall,
                 color = NexusTextMuted,
                 fontSize = 10.sp
