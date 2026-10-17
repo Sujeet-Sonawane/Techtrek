@@ -83,6 +83,7 @@ class AnalysisResponse(BaseModel):
     verification_steps: List[str]
     duration_seconds: Optional[float] = 0.0
     f0_std: Optional[float] = None
+    jitter_pct: Optional[float] = None
     spectral_centroid: Optional[float] = None
     disclaimer: str
 
@@ -146,7 +147,7 @@ async def analyze_audio(
     if len(audio_bytes) == 0:
         raise HTTPException(status_code=400, detail="Audio payload is empty.")
 
-    # 1. Acoustic Forensics Analysis
+    # 1. Acoustic Forensics Analysis (Issues #12, #13, #14)
     forensic_result = analyze_audio_forensics(audio_bytes, filename)
 
     # 2. Financial Context Detection
@@ -183,9 +184,69 @@ async def analyze_audio(
         verification_steps=risk_result["verification_steps"],
         duration_seconds=forensic_result.get("duration_seconds", 0.0),
         f0_std=forensic_result.get("f0_std"),
+        jitter_pct=forensic_result.get("jitter_pct"),
         spectral_centroid=forensic_result.get("spectral_centroid"),
         disclaimer=risk_result["disclaimer"]
     )
+
+
+# ==============================================================================
+# Issue #15: Real-Time Authenticity Timeline Endpoint
+# ==============================================================================
+@app.post("/analyze-timeline")
+async def analyze_timeline_endpoint(
+    file: Optional[UploadFile] = File(None),
+    sample_id: Optional[str] = Form(None)
+):
+    """
+    Breaks audio into time slices and produces an explainable authenticity timeline.
+    """
+    from audio_analyzer import generate_authenticity_timeline
+    
+    audio_bytes = b""
+    if sample_id and sample_id.lower() in DEMO_CATALOG:
+        sample = DEMO_CATALOG[sample_id.lower()]
+        file_path = os.path.join(SAMPLES_DIR, sample["filename"])
+        if os.path.exists(file_path):
+            with open(file_path, "rb") as f:
+                audio_bytes = f.read()
+    elif file:
+        audio_bytes = await file.read()
+    else:
+        raise HTTPException(status_code=400, detail="Missing audio input or sample_id")
+
+    timeline = generate_authenticity_timeline(audio_bytes, window_sec=1.5)
+    return {"timeline": timeline}
+
+
+# ==============================================================================
+# Issue #16: Active Voice Verification Challenge (Anti-Replay)
+# ==============================================================================
+@app.get("/challenge/generate")
+def generate_voice_challenge():
+    """
+    Generates a dynamic challenge phrase and security code to defeat deepfake replays.
+    """
+    from audio_analyzer import ActiveVoiceChallengeEngine
+    return ActiveVoiceChallengeEngine.generate_challenge()
+
+
+@app.post("/challenge/verify")
+async def verify_voice_challenge(
+    expected_code: str = Form(...),
+    file: Optional[UploadFile] = File(None)
+):
+    """
+    Validates caller's spoken response for liveness and active responsiveness.
+    """
+    from audio_analyzer import ActiveVoiceChallengeEngine
+    
+    if not file:
+        raise HTTPException(status_code=400, detail="Missing challenge response audio")
+        
+    audio_bytes = await file.read()
+    result = ActiveVoiceChallengeEngine.verify_liveness(audio_bytes, expected_code)
+    return result
 
 
 @app.post("/analyze-stream")

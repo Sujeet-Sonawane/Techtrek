@@ -327,6 +327,17 @@ const NexusAudioEngine = {
       }
     }
 
+    // Jitter calculation
+    let jitterPct = 1.2;
+    if (f0Contour.length > 5) {
+      let diffSum = 0;
+      for (let j = 1; j < f0Contour.length; j++) {
+        diffSum += Math.abs(1 / f0Contour[j] - 1 / f0Contour[j - 1]);
+      }
+      const meanPeriod = f0Mean > 0 ? 1 / f0Mean : 0.006;
+      jitterPct = Math.round(((diffSum / (f0Contour.length - 1)) / meanPeriod) * 1000) / 10;
+    }
+
     return {
       valid: true,
       classification: classification,
@@ -342,6 +353,7 @@ const NexusAudioEngine = {
       verification_steps: this.getVerificationSteps(),
       duration_seconds: Math.round(duration * 100) / 100,
       f0_std: Math.round(f0Std * 10) / 10,
+      jitter_pct: jitterPct,
       spectral_centroid: Math.round(spectral.spectralCentroid),
       disclaimer: "Risk level is based on detected acoustic signals and established financial safety rules; it is not an arbitrary statistical probability."
     };
@@ -355,5 +367,13 @@ const NexusAudioEngine = {
       "Never disclose OTPs, UPI PINs, passwords, or banking credentials over the phone.",
       "Verify the beneficiary account details independently before initiating transfers."
     ];
+  },
+
+  generateChallenge() {
+    const code = Math.floor(1000 + Math.random() * 9000);
+    return {
+      code: code,
+      phrase: `My verification code is ${code}`
+    };
   }
 };
