@@ -57,7 +57,7 @@ class NexusViewModel(application: Application) : AndroidViewModel(application) {
     private val forensicsRepo = MediaForensicsRepository(application)
     private val truthCheckRepo = TruthCheckRepository()
     private val reportStoreRepo = ReportStoreRepository(application)
-    private val callShieldRepo = CallShieldRepository(application)
+    private val callShieldRepo = CallShieldRepository.getInstance(application)
 
     // Call Shield State
     val callShieldState: StateFlow<CallShieldState> = callShieldRepo.callState
@@ -250,7 +250,13 @@ class NexusViewModel(application: Application) : AndroidViewModel(application) {
         navigateTo(NexusScreen.CALL_SHIELD)
     }
 
+    fun triggerTestIncomingCall(callerNumber: String = "+91 98201 44821") {
+        com.nexus.app.service.CallShieldService.startCallGuard(getApplication(), callerNumber, "RINGING")
+        navigateTo(NexusScreen.CALL_SHIELD)
+    }
+
     fun stopCallShield() {
+        com.nexus.app.service.CallShieldService.stopCallGuard(getApplication())
         callShieldRepo.stopCallShield()
     }
 }

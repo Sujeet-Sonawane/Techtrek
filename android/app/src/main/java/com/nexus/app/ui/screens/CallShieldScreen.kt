@@ -1,5 +1,14 @@
 package com.nexus.app.ui.screens
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -53,9 +62,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.nexus.app.data.model.CallSecurityStatus
 import com.nexus.app.data.model.CallShieldState
 import com.nexus.app.data.model.CallSimulationPreset
@@ -83,9 +94,26 @@ fun CallShieldScreen(
     viewModel: NexusViewModel,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val callState by viewModel.callShieldState.collectAsState()
     val isLiveMicListening by viewModel.isLiveMicListening.collectAsState()
     var autoScreenCallsEnabled by remember { mutableStateOf(true) }
+
+    // Check runtime telephony and alert permissions
+    val hasPhoneStatePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+    val hasCallLogPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED
+    val hasAudioPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+    val hasNotificationPermission = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || 
+        ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+    val canDrawOverlay = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context)
+
+    val allCorePermissionsGranted = hasPhoneStatePermission && hasCallLogPermission && hasAudioPermission && hasNotificationPermission
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { _ ->
+        // Triggered after user grants/denies
+    }
 
     LazyColumn(
         modifier = modifier
@@ -106,7 +134,7 @@ fun CallShieldScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "LIVE CALL SHIELD • TRUECALLER-STYLE VERIFICATION",
+                        text = "LIVE CALL SHIELD • REAL TELEPHONY SCREENING",
                         style = MaterialTheme.typography.labelSmall,
                         color = NexusBlueLight,
                         fontWeight = FontWeight.Bold,
@@ -126,6 +154,111 @@ fun CallShieldScreen(
                     style = MaterialTheme.typography.bodyMedium,
                     color = NexusTextSecondary
                 )
+            }
+        }
+
+        // Live Telephony Permission & Background Shield Status Card
+        item {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        1.dp,
+                        if (allCorePermissionsGranted) NexusGreen else NexusAmber,
+                        RoundedCornerShape(16.dp)
+                    ),
+                colors = CardDefaults.cardColors(containerColor = NexusSurface),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(10.dp)
+                                    .clip(CircleShape)
+                                    .background(if (allCorePermissionsGranted) NexusGreen else NexusAmber)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = if (allCorePermissionsGranted) "BACKGROUND CALL GUARD ACTIVE" else "CALL PERMISSIONS REQUIRED",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = if (allCorePermissionsGranted) NexusGreen else NexusAmber,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        if (!allCorePermissionsGranted) {
+                            Button(
+                                onClick = {
+                                    val list = mutableListOf(
+                                        Manifest.permission.READ_PHONE_STATE,
+                                        Manifest.permission.READ_CALL_LOG,
+                                        Manifest.permission.RECORD_AUDIO
+                                    )
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        list.add(Manifest.permission.POST_NOTIFICATIONS)
+                                    }
+                                    permissionLauncher.launch(list.toTypedArray())
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = NexusBluePrimary),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text("Grant Access", style = MaterialTheme.typography.labelMedium, color = Color.White)
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = if (allCorePermissionsGranted)
+                            "NEXUS is actively listening for incoming phone calls. When a call arrives, a high-priority Heads-Up alert and screening HUD will appear automatically."
+                        else
+                            "To automatically intercept incoming calls and verify caller voice in real time, Android requires Phone State, Call Log, and Notification permissions.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = NexusTextSecondary
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Test Real Incoming Call Button
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                viewModel.triggerTestIncomingCall("+91 98201 44821")
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = NexusBluePrimary),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Icon(Icons.Default.Call, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("⚡ Test Real Incoming Call Alert", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                        }
+
+                        if (!canDrawOverlay && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            OutlinedButton(
+                                onClick = {
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        Uri.parse("package:${context.packageName}")
+                                    )
+                                    context.startActivity(intent)
+                                },
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text("Floating HUD", style = MaterialTheme.typography.labelMedium, color = NexusBlueLight)
+                            }
+                        }
+                    }
+                }
             }
         }
 

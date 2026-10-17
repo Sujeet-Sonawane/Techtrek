@@ -17,7 +17,8 @@ data class ClaimEntities(
     val eligibility: String? = null,
     val deadline: String? = null,
     val targetUrl: String? = null,
-    val feeOrPayment: String? = null
+    val feeOrPayment: String? = null,
+    val contactPhone: String? = null
 )
 
 data class SpokenClaim(
