@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NEXUS — Voice Authenticity & Financial Safety</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app-container">
+    
+    <!-- Top Persistent Header -->
+    <header class="app-header">
+      <div class="brand-wrapper">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" x2="12" y1="19" y2="22"/>
+          </svg>
+        </div>
+        <span class="brand-name">NEXUS</span>
+      </div>
+      <div class="header-actions">
+        <div id="engine-status-pill" class="engine-pill">
+          <span class="engine-dot"></span>
+          <span id="engine-status-text">Offline Ready</span>
+        </div>
+        <button class="icon-button" onclick="openSettingsModal()" title="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Screen 1: Home Screen -->
+    <main id="screen-home" class="screen active">
+      <div class="hero-tagline">Voice Safety, Reimagined</div>
+      <h1 class="screen-title">Don't Trust the Voice.<br>Verify the Request.</h1>
+      <p class="screen-subtitle">Know the voice. Understand the risk. Verify before you act on financial demands.</p>
+
+      <div class="flow-diagram">
+        <div class="flow-step">
+          <span style="font-size:16px;">🎙️</span>
+          <span class="flow-label">Voice</span>
+        </div>
+        <span class="flow-arrow">➔</span>
+        <div class="flow-step">
+          <span style="font-size:16px;">🔬</span>
+          <span class="flow-label">Analysis</span>
+        </div>
+        <span class="flow-arrow">➔</span>
+        <div class="flow-step">
+          <span style="font-size:16px;">⚠️</span>
+          <span class="flow-label">Risk</span>
+        </div>
+        <span class="flow-arrow">➔</span>
+        <div class="flow-step">
+          <span style="font-size:16px;">🛡️</span>
+          <span class="flow-label">Safety</span>
+        </div>
+      </div>
+
+      <button id="btn-nav-analyze" class="btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"/>
+          <polygon points="10 8 16 12 10 16 10 8"/>
+        </svg>
+        Analyze a Voice
+      </button>
+
+      <button id="btn-nav-live" class="btn-secondary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        Live Call Demo (Simulated)
+      </button>
+
+      <div class="card" style="margin-top: 10px;">
+        <div class="card-title">Recent Voice Checks</div>
+        <div class="recent-list">
+          <div class="recent-item">
+            <div class="recent-info">
+              <h4>Rahul Sharma (Manager)</h4>
+              <p>Transfer ₹50,000 immediately</p>
+            </div>
+            <span class="badge badge-red">High Risk</span>
+          </div>
+          <div class="recent-item">
+            <div class="recent-info">
+              <h4>Priya Patel (Finance)</h4>
+              <p>Vendor invoice confirmation</p>
+            </div>
+            <span class="badge badge-green">Low Risk</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Screen 2: Audio Input Screen -->
+    <main id="screen-audio-input" class="screen">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+        <button id="btn-back-input" class="icon-button" title="Back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <h2 style="font-size:18px; font-weight:700;">Audio Source Selection</h2>
+      </div>
+
+      <div class="tabs-container">
+        <button id="tab-btn-samples" class="tab-btn active" onclick="switchTab('samples')">Demo Samples</button>
+        <button id="tab-btn-upload" class="tab-btn" onclick="switchTab('upload')">Upload File</button>
+        <button id="tab-btn-record" class="tab-btn" onclick="switchTab('record')">Record Mic</button>
+      </div>
+
+      <!-- Tab: Demo Samples -->
+      <div id="tab-content-samples" class="tab-content active">
+        <div id="samples-list-container" class="samples-grid"></div>
+      </div>
+
+      <!-- Tab: Upload -->
+      <div id="tab-content-upload" class="tab-content">
+        <label class="upload-box">
+          <input type="file" id="file-uploader" accept="audio/*" style="display:none;" onchange="handleFileInput(this)">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin:0 auto 10px; color:var(--accent-light);">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <div style="font-weight:600; margin-bottom:4px;">Tap to select WAV / MP3</div>
+          <div style="font-size:12px; color:var(--text-secondary);">Supports local audio recordings from phone</div>
+        </label>
+      </div>
+
+      <!-- Tab: Record -->
+      <div id="tab-content-record" class="tab-content">
+        <div class="record-box">
+          <div id="record-btn-icon" class="record-btn-circle">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            </svg>
+          </div>
+          <div id="record-status-label" style="font-size:13px; font-weight:600; color:var(--text-secondary);">
+            Tap microphone to start recording speech
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected File Summary -->
+      <div class="selected-file-card">
+        <div class="file-meta">
+          <h4 id="selected-file-name">Sample_A_Genuine.wav</h4>
+          <p id="selected-file-details">00:03 • WAV • Likely Genuine</p>
+        </div>
+        <span class="badge badge-green" id="selected-file-badge">Ready</span>
+      </div>
+
+      <!-- Transcript Input -->
+      <label style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:6px; display:block;">
+        Conversation Transcript / Speech Text (for financial context detection)
+      </label>
+      <textarea id="transcript-input" class="transcript-input" rows="3" placeholder="Enter or paste speech text..."></textarea>
+
+      <!-- Primary Action CTA -->
+      <button id="btn-analyze-voice" class="btn-primary">
+        Analyze Voice
+      </button>
+    </main>
+
+    <!-- Screen 3: Result Screen (High Visual Priority) -->
+    <main id="screen-result" class="screen">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+        <button id="btn-back-result" class="icon-button" title="Back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <h2 style="font-size:18px; font-weight:700;">Voice Analysis Assessment</h2>
+      </div>
+
+      <!-- Main Authenticity & Risk Badge -->
+      <div id="result-badge-card" class="result-header-badge suspicious">
+        <div id="result-cat-label" class="result-category-label">VOICE AUTHENTICITY</div>
+        <div id="result-status-text" class="result-status-main">SUSPICIOUS</div>
+        <div>
+          <span id="result-risk-chip" class="risk-level-strip risk-high">RISK LEVEL: HIGH</span>
+        </div>
+      </div>
+
+      <!-- Evidence & Quality Row -->
+      <div class="chips-row">
+        <div class="chip">
+          Evidence Strength
+          <strong id="result-evidence-val">Moderate</strong>
+        </div>
+        <div class="chip">
+          Audio Quality
+          <strong id="result-quality-val">Good</strong>
+        </div>
+      </div>
+
+      <!-- Detected Signals -->
+      <div class="card">
+        <div class="card-title">Detected Signals</div>
+        <ul id="result-signals-list" class="signals-list"></ul>
+      </div>
+
+      <!-- Financial Context Alert -->
+      <div id="result-financial-box" class="financial-alert-box danger">
+        <span style="font-size:20px;">⚠️</span>
+        <div class="financial-alert-text">
+          <h4>FINANCIAL CONTEXT DETECTED</h4>
+          <p id="result-financial-desc">Sensitive financial request detected. Additional verification recommended.</p>
+        </div>
+      </div>
+
+      <!-- Plain Language Human Explanation -->
+      <div class="card">
+        <div class="card-title">Analysis Explanation</div>
+        <p id="result-explanation-text" class="explanation-text"></p>
+      </div>
+
+      <!-- Recommended Action Banner -->
+      <div id="result-action-banner" class="action-banner-urgent">
+        <h3>⚠️ VERIFY BEFORE YOU ACT</h3>
+        <p id="result-action-text">Verify the request through an independent trusted channel before taking financial action.</p>
+      </div>
+
+      <button id="btn-result-checklist" class="btn-secondary">
+        How Should I Verify?
+      </button>
+
+      <!-- Technical Details Drawer (For Judges) -->
+      <button id="btn-toggle-tech" class="btn-outline" style="margin-bottom:12px;">
+        View Technical Details (Judge Forensic View)
+      </button>
+
+      <div id="tech-details-box" class="card" style="display:none; font-size:12px;">
+        <div class="card-title">Forensic Acoustic Metrics</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+          <div>Pitch Variation (F0 std): <strong id="tech-f0">--</strong></div>
+          <div>Spectral Centroid: <strong id="tech-spectral">--</strong></div>
+          <div>Processed Duration: <strong id="tech-duration">--</strong></div>
+          <div>Classifier Engine: <strong>Autocorrelation + Spectral Moments</strong></div>
+        </div>
+        <p id="tech-disclaimer" style="color:var(--text-tertiary); font-style:italic; font-size:11px;"></p>
+      </div>
+    </main>
+
+    <!-- Screen 4: Live Call Demo (Innovation WOW Feature) -->
+    <main id="screen-live-call" class="screen">
+      <div class="live-call-container">
+        
+        <div class="call-header-profile">
+          <div class="caller-avatar">👤</div>
+          <div class="caller-name">Rahul Sharma</div>
+          <div class="caller-title">Manager • Incoming Call</div>
+          <div id="live-call-timer" class="call-timer">00:00</div>
+        </div>
+
+        <!-- Live Waveform -->
+        <div class="waveform-box">
+          <canvas id="waveform-canvas"></canvas>
+        </div>
+
+        <!-- Live Status -->
+        <div class="live-status-row">
+          <div class="live-status-card">
+            <label>Voice Authenticity</label>
+            <strong id="live-auth-status" style="color:var(--semantic-green);">LIKELY GENUINE</strong>
+          </div>
+          <div class="live-status-card">
+            <label>Live Risk</label>
+            <strong id="live-risk-status" style="color:var(--semantic-green);">LOW</strong>
+          </div>
+        </div>
+
+        <!-- Dynamic Live Alerts -->
+        <div id="live-voice-alert" class="live-alert-banner voice-alert">
+          <div class="live-alert-title">⚠️ VOICE ALERT</div>
+          <div class="live-alert-desc">Suspicious voice characteristics detected in stream.</div>
+        </div>
+
+        <div id="live-financial-alert" class="live-alert-banner financial-alert">
+          <div class="live-alert-title">🚨 FINANCIAL REQUEST DETECTED</div>
+          <div class="live-alert-desc">"Transfer ₹50,000 immediately." Verify independently before taking action!</div>
+        </div>
+
+        <!-- Real-Time Authenticity Timeline Strip -->
+        <div class="timeline-strip-container">
+          <div style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:4px;">
+            Real-Time Authenticity Timeline (Tap segment to explain)
+          </div>
+          <div id="live-timeline-strip" class="timeline-strip"></div>
+        </div>
+
+        <button id="btn-verify-challenge" class="btn-outline" style="margin-bottom:12px;">
+          Active Voice Challenge (Anti-Replay)
+        </button>
+
+        <button id="btn-end-call" class="btn-end-call">
+          End Call & Generate Trust Report
+        </button>
+
+      </div>
+    </main>
+
+    <!-- Screen 5: Post-Call Trust Report Screen -->
+    <main id="screen-report" class="screen">
+      <div class="report-header">
+        <div class="hero-tagline">NEXUS TRUST REPORT</div>
+        <h2 style="font-size:22px; font-weight:800;">Post-Call Security Assessment</h2>
+        <p style="font-size:13px; color:var(--text-secondary);">Caller: Rahul Sharma • Duration: 00:45</p>
+      </div>
+
+      <div class="report-metrics-grid">
+        <div class="metric-cell">
+          <span>Voice Status</span>
+          <strong style="color:var(--semantic-red);">Suspicious</strong>
+        </div>
+        <div class="metric-cell">
+          <span>Risk Level</span>
+          <strong style="color:var(--semantic-red);">HIGH</strong>
+        </div>
+        <div class="metric-cell">
+          <span>Evidence Strength</span>
+          <strong>Moderate</strong>
+        </div>
+        <div class="metric-cell">
+          <span>Audio Quality</span>
+          <strong>Good</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Why was this flagged?</div>
+        <ul class="signals-list">
+          <li>Synthetic-speech-like signals detected (reduced natural pitch variation).</li>
+          <li>Sensitive financial request detected ("Transfer ₹50,000 immediately").</li>
+          <li>High-urgency psychological pressure applied during call.</li>
+          <li>Independent verification strongly recommended.</li>
+        </ul>
+      </div>
+
+      <div class="action-banner-urgent">
+        <h3>RECOMMENDED ACTION</h3>
+        <p>Do not act on this financial transfer request until independently verified through a trusted secondary channel.</p>
+      </div>
+
+      <button id="btn-report-checklist" class="btn-secondary">
+        View Verification Checklist
+      </button>
+
+      <button id="btn-report-home" class="btn-primary">
+        Done • Return to Home
+      </button>
+    </main>
+
+    <!-- Modal: Verification Checklist -->
+    <div id="checklist-modal" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <div class="modal-title">Verification Checklist</div>
+          <button class="modal-close-btn" onclick="closeChecklistModal()">✕</button>
+        </div>
+        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">
+          Complete these steps before transferring funds or sharing credentials:
+        </p>
+        
+        <div class="checklist-item">
+          <input type="checkbox" class="checklist-checkbox">
+          <div><strong>1. Stop and pause</strong><br>Refuse immediate pressure to transfer money right now.</div>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" class="checklist-checkbox">
+          <div><strong>2. Call back on a trusted number</strong><br>Dial the person directly using your saved contact list, not the incoming line.</div>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" class="checklist-checkbox">
+          <div><strong>3. Secondary communication channel</strong><br>Confirm request via official corporate email or secure messenger.</div>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" class="checklist-checkbox">
+          <div><strong>4. Never share credentials</strong><br>Never disclose OTP, PIN, password, or bank card details under any circumstances.</div>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" class="checklist-checkbox">
+          <div><strong>5. Independent account verification</strong><br>Check beneficiary UPI/Account number with authorized finance personnel.</div>
+        </div>
+
+        <button class="btn-primary" onclick="closeChecklistModal()" style="margin-top:16px;">
+          I Understand & Will Verify
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal: Active Voice Verification Challenge (P2 Innovation) -->
+    <div id="challenge-modal" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <div class="modal-title">Active Voice Challenge</div>
+          <button class="modal-close-btn" onclick="closeChallengeModal()">✕</button>
+        </div>
+        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:14px;">
+          Ask the caller to repeat the challenge phrase below to defeat pre-recorded deepfakes and test responsiveness:
+        </p>
+
+        <div style="background:var(--bg-surface-elevated); border:1px solid var(--accent-light); border-radius:var(--radius-sm); padding:16px; text-align:center; margin-bottom:16px;">
+          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">ASK CALLER TO SAY:</div>
+          <div style="font-size:18px; font-weight:800; color:var(--accent-light);">
+            "My verification code is <span id="challenge-code-text">4827</span>"
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="alert('Liveness response verified: Passed active interaction test.'); closeChallengeModal();">
+          Mark Response Verified
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal: Settings (Backend URL Configuration) -->
+    <div id="settings-modal" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <div class="modal-title">NEXUS Configuration</div>
+          <button class="modal-close-btn" onclick="closeSettingsModal()">✕</button>
+        </div>
+        <label style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:6px; display:block;">
+          FastAPI Backend Server URL
+        </label>
+        <input type="text" id="settings-input-url" class="transcript-input" value="http://10.0.2.2:8000" placeholder="e.g. http://192.168.1.5:8000">
+        <p style="font-size:11px; color:var(--text-tertiary); margin-bottom:16px;">
+          Use <code>http://10.0.2.2:8000</code> for Android Emulator or your local Wi-Fi IP for physical devices. NEXUS automatically falls back to the internal offline engine if disconnected.
+        </p>
+        <button class="btn-primary" onclick="saveSettings()">Save & Connect</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="audio-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
